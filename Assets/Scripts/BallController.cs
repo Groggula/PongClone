@@ -4,12 +4,16 @@ public class BallController : MonoBehaviour
 {
     public float speed;
     public float knockbackForce;
+    public int playerNumber = -1;
 
     private Rigidbody rb;
     private Vector2 initialDirection;
+    private SpawnManager spawnManager;
 
     void Start()
     {
+        spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+
         rb = GetComponent<Rigidbody>();
         initialDirection = RandomVector(-1f, 1f).normalized;
         rb.velocity = initialDirection * speed;
@@ -20,6 +24,7 @@ public class BallController : MonoBehaviour
         if (transform.position.x > 15 || transform.position.x < -15)
         {
             Destroy(gameObject);
+            spawnManager.onBallDestroy();
         }
     }
 
@@ -34,13 +39,22 @@ public class BallController : MonoBehaviour
         Vector3 reflectedVelocity = Vector3.Reflect(rb.velocity, collisionNormal);
         rb.velocity = reflectedVelocity.normalized * speed;
 
-        if (collision.gameObject.name == "PlayerOne")
+        IPowerUp powerUp = collision.gameObject.GetComponent<IPowerUp>();
+
+        if (collision.gameObject.CompareTag("PlayerOne"))
         {
-            Debug.Log("Player 1 hit ball");
+            playerNumber = 1;
         }
-        else if (collision.gameObject.name == "PlayerTwo")
+        else if (collision.gameObject.CompareTag("PlayerTwo"))
         {
-            Debug.Log("Player 2 hit ball");
+            playerNumber = 2;
+        }
+
+        if (powerUp != null)
+        {
+            FindObjectOfType<PowerUpManager>().HandlePowerUpCollision(powerUp, playerNumber);
+            Debug.Log("PowerUp hit by" + playerNumber);
+            
         }
     }
 }

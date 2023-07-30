@@ -7,6 +7,9 @@ TagManager:
   - Floor
   - Wall
   - Ball
+  - PowerUp
+  - PlayerTwo
+  - PlayerOne
   layers:
   - Default
   - TransparentFX

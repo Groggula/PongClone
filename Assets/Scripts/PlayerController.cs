@@ -5,9 +5,10 @@ public class PlayerController : MonoBehaviour
 {
     public float moveSpeed;
     public float clampY;
+    public int player;
+    public PlayerInputConfig inputConfig;
 
     private Rigidbody rb;
-    private PlayerInputConfig inputConfig;
 
 
 
