@@ -6,13 +6,13 @@ public class SpawnManager : MonoBehaviour
     public GameObject[] powerup;
 
     public int activeBalls = 0;
-    private float spawnX = 10f;
-    private float spawnY = 5.5f;
+    private float spawnX = 11f;
+    private float spawnY = 6.5f;
     private bool stopSpawning = false;
 
     void Start()
     {
-        SpawnBall();
+        Invoke(nameof(SpawnBall), 1);
         InvokeRepeating(nameof(SpawnPowerUp), 2, 2);
     }
 

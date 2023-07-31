@@ -9,17 +9,16 @@ public class PlayerController : MonoBehaviour
     public PlayerInputConfig inputConfig;
 
     private Rigidbody rb;
+    private AudioSource sfxAudio;
 
-
-
-    // Start is called before the first frame update
     void Start()
     {
+        sfxAudio = GetComponent<AudioSource>();
+
         rb = GetComponent<Rigidbody>();
         inputConfig = GetComponent<PlayerInputConfig>();
     }
 
-    // Update is called once per frame
     private void FixedUpdate()
     {
         float verticalInput = 0f;
@@ -41,5 +40,10 @@ public class PlayerController : MonoBehaviour
         clampedPosition.y = Mathf.Clamp(clampedPosition.y, -clampY, clampY);
         rb.position = clampedPosition;
 
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        sfxAudio.Play();
     }
 }

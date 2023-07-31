@@ -5,18 +5,26 @@ public class BallController : MonoBehaviour
     public float speed;
     public float knockbackForce;
     public int playerNumber = -1;
+    public TrailRenderer trailRenderer;
 
     private Rigidbody rb;
     private Vector2 initialDirection;
     private SpawnManager spawnManager;
+    private AudioSource sfxAudio;
 
     void Start()
     {
         spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
 
+        sfxAudio = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
         initialDirection = RandomVector(-1f, 1f).normalized;
         rb.velocity = initialDirection * speed;
+
+        if(trailRenderer != null)
+        {
+            trailRenderer.enabled = false;
+        }
     }
 
     void Update()
@@ -25,6 +33,11 @@ public class BallController : MonoBehaviour
         {
             Destroy(gameObject);
             spawnManager.onBallDestroy();
+        }
+
+        if (speed >= 18 && trailRenderer != null)
+        {
+            trailRenderer.enabled = true;
         }
     }
 
@@ -56,5 +69,8 @@ public class BallController : MonoBehaviour
             Debug.Log("PowerUp hit by" + playerNumber);
             
         }
+
+        sfxAudio.Play();
+        speed++;
     }
 }
