@@ -9,11 +9,43 @@ public class SpawnManager : MonoBehaviour
     private float spawnX = 11f;
     private float spawnY = 6.5f;
     private bool stopSpawning = false;
+    private GameManager gameManager;
+
+    private float ballSpawnTimer = 1f;
+    private float powerupSpawnMinDelay = 2f;
+    private float powerupSpawnMaxDelay = 5f;
+    private float powerupSpawnTimer = 3f;
+
+    private bool hasSpawnedInitialBall = false;
 
     void Start()
     {
-        Invoke(nameof(SpawnBall), 1);
-        InvokeRepeating(nameof(SpawnPowerUp), 2, 2);
+        gameManager = GameObject.FindObjectOfType<GameManager>();
+    }
+
+    void Update()
+    {
+        if (!hasSpawnedInitialBall && gameManager.isGameStarted)
+        {
+            if (ballSpawnTimer <= 0f)
+            {
+                hasSpawnedInitialBall = true;
+                SpawnBall();
+            }
+
+            ballSpawnTimer -= Time.deltaTime;
+        }
+
+        if (gameManager.isGameStarted)
+        {
+            if (powerupSpawnTimer <= 0f)
+            {
+                SpawnPowerUp();
+                powerupSpawnTimer = Random.Range(powerupSpawnMinDelay, powerupSpawnMaxDelay);
+            }
+
+            powerupSpawnTimer -= Time.deltaTime;
+        }
     }
 
     public void SpawnBall()
@@ -50,5 +82,6 @@ public class SpawnManager : MonoBehaviour
     public void onGameOver()
     {
         stopSpawning = true;
+        gameManager.ShowRestartButton();
     }
 }
